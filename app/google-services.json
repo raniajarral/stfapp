@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "391874314317",
+    "project_id": "stf-app-1f3a7",
+    "storage_bucket": "stf-app-1f3a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391874314317:android:e5cef451378c1651cc1c04",
+        "android_client_info": {
+          "package_name": "com.example.stfapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqPurHJdMgx4eoLQlq_zyvLNA63QeBrpU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
