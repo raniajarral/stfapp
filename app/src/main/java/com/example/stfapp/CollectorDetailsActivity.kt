@@ -16,6 +16,7 @@ class CollectorDetailsActivity : AppCompatActivity() {
     private lateinit var activeClientsListView: ListView
     private lateinit var inactiveClientsListView: ListView
     private lateinit var createClientButton: Button
+    private lateinit var badClientsButton: Button // Step 1: Add the button variable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +26,17 @@ class CollectorDetailsActivity : AppCompatActivity() {
         activeClientsListView = findViewById(R.id.activeClientsListView)
         inactiveClientsListView = findViewById(R.id.inactiveClientsListView)
         createClientButton = findViewById(R.id.createClientButton)
+        badClientsButton = findViewById(R.id.badClientsButton) // Step 2: Find the button by ID
 
+        // Set up the Create Client button
         createClientButton.setOnClickListener {
             val intent = Intent(this, CreateClientActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Set up the Bad Clients button
+        badClientsButton.setOnClickListener { // Step 3: Set the click listener
+            val intent = Intent(this, BadClientsActivity::class.java) // Step 4: Start BadClientsActivity
             startActivity(intent)
         }
 

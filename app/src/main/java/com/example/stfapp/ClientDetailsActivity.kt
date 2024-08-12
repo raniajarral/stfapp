@@ -13,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ClientDetailsActivity : AppCompatActivity() {
 
     private lateinit var firestore: FirebaseFirestore
-    private lateinit var clientId: String
+    private lateinit var clientName: String
 
     private lateinit var clientNameTextView: TextView
     private lateinit var amountTextView: TextView
@@ -42,14 +42,14 @@ class ClientDetailsActivity : AppCompatActivity() {
         markAsBadButton = findViewById(R.id.badButton)
         editButton = findViewById(R.id.editButton)
 
-        // Get the client ID from the intent
-        clientId = intent.getStringExtra("CLIENT_ID") ?: ""
+        // Get the client name from the intent
+        clientName = intent.getStringExtra("clientName") ?: ""
 
-        Log.d("ClientDetailsActivity", "Received Client ID: $clientId")
+        Log.d("ClientDetailsActivity", "Received Client Name: $clientName")
 
-        if (clientId.isEmpty()) {
-            Log.e("ClientDetailsActivity", "Client ID is missing")
-            Toast.makeText(this, "Error: Missing client ID", Toast.LENGTH_SHORT).show()
+        if (clientName.isEmpty()) {
+            Log.e("ClientDetailsActivity", "Client name is missing")
+            Toast.makeText(this, "Error: Missing client name", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -62,15 +62,17 @@ class ClientDetailsActivity : AppCompatActivity() {
     }
 
     private fun fetchClientDetails() {
-        firestore.collection("clients").document(clientId)
+        firestore.collection("clients")
+            .whereEqualTo("name", clientName)
             .get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val document = querySnapshot.documents[0]
                     Log.d("ClientDetailsActivity", "DocumentSnapshot data: ${document.data}")
                     populateFields(document)
                 } else {
                     Log.d("ClientDetailsActivity", "No such document")
-                    Toast.makeText(this, "No such document", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "No such client", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { exception ->
@@ -106,28 +108,61 @@ class ClientDetailsActivity : AppCompatActivity() {
             // Include other fields to update if needed
         )
 
-        firestore.collection("clients").document(clientId)
-            .update(updatedClient)
-            .addOnSuccessListener {
-                Log.d("ClientDetailsActivity", "Client details successfully updated")
-                Toast.makeText(this, "Client details successfully updated", Toast.LENGTH_SHORT).show()
+        firestore.collection("clients")
+            .whereEqualTo("name", clientName)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val clientDoc = querySnapshot.documents[0]
+                    val clientId = clientDoc.id
+
+                    // Update the existing client document with the new data
+                    firestore.collection("clients").document(clientId)
+                        .update(updatedClient)
+                        .addOnSuccessListener {
+                            Log.d("ClientDetailsActivity", "Client details successfully updated")
+                            Toast.makeText(this, "Client details successfully updated", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("ClientDetailsActivity", "Error updating client details: ", exception)
+                            Toast.makeText(this, "Error updating client details: ${exception.message}", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "Client not found", Toast.LENGTH_SHORT).show()
+                }
             }
             .addOnFailureListener { exception ->
-                Log.d("ClientDetailsActivity", "Error updating client details: ", exception)
-                Toast.makeText(this, "Error updating client details: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Log.d("ClientDetailsActivity", "Error finding client: ${exception.message}")
+                Toast.makeText(this, "Error finding client: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun markClientAsBad() {
-        firestore.collection("clients").document(clientId)
-            .update("status", "bad")
-            .addOnSuccessListener {
-                Log.d("ClientDetailsActivity", "Client status successfully updated to 'bad'")
-                Toast.makeText(this, "Client status successfully updated to 'bad'", Toast.LENGTH_SHORT).show()
+        firestore.collection("clients")
+            .whereEqualTo("name", clientName)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val clientDoc = querySnapshot.documents[0]
+                    val clientId = clientDoc.id
+
+                    firestore.collection("clients").document(clientId)
+                        .update("status", "bad")
+                        .addOnSuccessListener {
+                            Log.d("ClientDetailsActivity", "Client status successfully updated to 'bad'")
+                            Toast.makeText(this, "Client status successfully updated to 'bad'", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("ClientDetailsActivity", "Error updating client status: ", exception)
+                            Toast.makeText(this, "Error updating client status: ${exception.message}", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "Client not found", Toast.LENGTH_SHORT).show()
+                }
             }
             .addOnFailureListener { exception ->
-                Log.d("ClientDetailsActivity", "Error updating client status: ", exception)
-                Toast.makeText(this, "Error updating client status: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Log.d("ClientDetailsActivity", "Error finding client: ${exception.message}")
+                Toast.makeText(this, "Error finding client: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
