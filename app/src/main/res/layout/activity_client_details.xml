@@ -15,7 +15,7 @@
         android:text="Client Details"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:textColor="#212121"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
                 android:textColor="#212121"
                 android:text="Date" />
 
-            <TextView
+            <EditText
                 android:id="@+id/dateValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
                 android:textColor="#212121"
                 android:text="Amount" />
 
-            <TextView
+            <EditText
                 android:id="@+id/amountValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

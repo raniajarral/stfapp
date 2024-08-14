@@ -11,6 +11,7 @@ class CreateClientActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var clientNameEditText: EditText
     private lateinit var saveClientButton: Button
+    private lateinit var collectorId: String // To store the collector ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +21,9 @@ class CreateClientActivity : AppCompatActivity() {
         clientNameEditText = findViewById(R.id.clientNameEditText)
         saveClientButton = findViewById(R.id.saveButton)
 
+        // Retrieve collector ID from the intent
+        collectorId = intent.getStringExtra("COLLECTOR_ID") ?: ""
+
         saveClientButton.setOnClickListener {
             val clientName = clientNameEditText.text.toString().trim()
             if (clientName.isEmpty()) {
@@ -27,9 +31,16 @@ class CreateClientActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (collectorId.isEmpty()) {
+                Toast.makeText(this, "Collector ID not found", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Create client data with a collectorId field
             val client = hashMapOf(
                 "name" to clientName,
-                "status" to "inactive" // Default status
+                "status" to "inactive", // Default status
+                "collectorId" to collectorId // Store collectorId directly
             )
 
             firestore.collection("clients")
