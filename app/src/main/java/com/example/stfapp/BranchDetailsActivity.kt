@@ -1,5 +1,6 @@
 package com.example.stfapp
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,6 +20,7 @@ class BranchDetailsActivity : AppCompatActivity() {
     private lateinit var createCollectorButton: Button
     private lateinit var branch: String
     private lateinit var generateReportButton: AppCompatImageButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_branch_details)
@@ -46,12 +49,17 @@ class BranchDetailsActivity : AppCompatActivity() {
             }
         }
 
+        collectorsListView.onItemLongClickListener = AdapterView.OnItemLongClickListener { _, _, position, _ ->
+            val selectedCollectorName = collectorsListView.getItemAtPosition(position) as String
+            showDeleteConfirmationDialog(branch, selectedCollectorName)
+            true
+        }
+
         generateReportButton.setOnClickListener {
             val intent = Intent(this, ReportActivity::class.java)
             intent.putExtra("branchName", branch) // Pass the branch name to the report activity
             startActivity(intent)
         }
-
     }
 
     private fun fetchCollectors(branchName: String) {
@@ -93,5 +101,47 @@ class BranchDetailsActivity : AppCompatActivity() {
                 Log.w("BranchDetailsActivity", "Error fetching collector ID", e)
                 Toast.makeText(this, "Error fetching collector ID", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun showDeleteConfirmationDialog(branchName: String, collectorName: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Collector")
+            .setMessage("Are you sure you want to delete this collector and all associated clients?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteCollectorAndClients(branchName, collectorName)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteCollectorAndClients(branchName: String, collectorName: String) {
+        fetchCollectorId(branchName, collectorName) { collectorId ->
+            // Delete associated clients
+            firestore.collection("clients")
+                .whereEqualTo("collectorId", collectorId)
+                .get()
+                .addOnSuccessListener { clientDocuments ->
+                    for (clientDocument in clientDocuments) {
+                        clientDocument.reference.delete()
+                    }
+
+                    // Delete the collector
+                    firestore.collection("collectors")
+                        .document(collectorId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Collector and associated clients deleted", Toast.LENGTH_SHORT).show()
+                            fetchCollectors(branchName) // Refresh the list after deletion
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("BranchDetailsActivity", "Error deleting collector", e)
+                            Toast.makeText(this, "Error deleting collector", Toast.LENGTH_SHORT).show()
+                        }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("BranchDetailsActivity", "Error fetching associated clients", e)
+                    Toast.makeText(this, "Error deleting associated clients", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 }

@@ -244,7 +244,7 @@ class ClientDetailsActivity : AppCompatActivity() {
     }
 
     private fun toggleEditMode() {
-        clientNameTextView.isEnabled = false
+        clientNameTextView.isEnabled = true
         val isEditMode = !amountTextView.isEnabled
         amountTextView.isEnabled = isEditMode
         dateTextView.isEnabled = isEditMode

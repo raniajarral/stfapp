@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_corners"
+    android:padding="8dp"
+    android:layout_marginBottom="8dp"
+    android:elevation="2dp">
+
+    <!-- Branch Name -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/branchName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="4dp"
+        android:textColor="@color/colorPrimary"/>
+
+    <!-- Active Clients -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/activeClients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingBottom="2dp"
+        android:text="Active Clients: "/>
+
+    <!-- Inactive Clients -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/inactiveClients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingBottom="2dp"
+        android:text="Inactive Clients: "/>
+
+    <!-- Loan Amount -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/loanAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingBottom="2dp"
+        android:text="Loan Amount: "/>
+
+    <!-- Payable Amount -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/payableAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingBottom="2dp"
+        android:text="Payable Amount: "/>
+
+    <!-- Bad Clients -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/badClients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Bad Clients: "/>
+
+    <!-- Total Collectors -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/totalCollectors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingTop="4dp"
+        android:text="Total Collectors: "/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
