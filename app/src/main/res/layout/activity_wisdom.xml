@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/STF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PAYLY - Short Term Financing"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/stf1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="The PAYLY lending model is for a period of 5 days only. The maximum loan amount without collateral is P1,000. Loans above P1,000 require collateral, with a maximum loan limit of P50,000. However, we strongly recommend not exceeding P20,000 for collateralized loans during your first year, until you gain enough experience."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/stf2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Interest rates depend on the loan amount, as detailed in the attached sheet."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+
+        <TextView
+            android:id="@+id/stf4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Example:"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/stf5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="- Loan Term: 5 Days"
+            android:textSize="16sp"
+            android:layout_marginBottom="0.1dp" />
+
+        <TextView
+            android:id="@+id/stf6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="- Loan Amount: P1,000"
+            android:textSize="16sp"
+            android:layout_marginBottom="0.5dp" />
+
+        <TextView
+            android:id="@+id/stf7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="- Interest Rate: 9%"
+            android:textSize="16sp"
+            android:layout_marginBottom="1dp" />
+
+        <TextView
+            android:id="@+id/stf8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="- Interest: P1,000 x 0.09 = P90"
+            android:textSize="16sp"
+            android:layout_marginBottom="1dp" />
+
+        <TextView
+            android:id="@+id/stf9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="- Total Amount Due: P1,090"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+
+        <Button
+            android:id="@+id/wisdom_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10 Lessons"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="1. The owner should personally give out the loan and handle the collection. No one else should disburse the loan to the client."
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. If the owner hires collectors, their work must be closely monitored. If there is a late or missed payment, the owner should immediately contact the client to find out why."
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Add more TextViews as needed for additional paragraphs or instructions -->
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="3. The ideal clean investment (without collateral) is P30,000 or 30 active clients at any given time."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="4. The ideal collateralized loan amount is P100,000. The number of clients with collateralized loans should not be more than 10, and a single collateralized loan should not be more than P20,000."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="5. The collateralized loan should not be more than 50% of the collateral's market value."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="6. Use no more than 65% of your earned profit. Bad debts are a normal part of the lending business, so reinvest at least 35% of your retained earnings to ensure long-term sustainability."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="7. Avoid hiring collectors on a salary basis due to the nature of this business. Instead, hire them on a commission or profit-sharing basis, offering up to 40% of the gross profit."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="8. If you plan to expand your business, you will need to hire collectors and establish branches to oversee their activities. The ideal number of branches is four, with four collectors per branch. Managing a larger number of branches or collectors can become challenging, while smaller numbers may not justify the effort."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="9. When hiring a collector, it is essential to personally conduct a thorough background investigation. Collectors must remit their collections to the owner on the same day, regardless of the amount collected. Additionally, always perform a credit investigation before disbursing loans to clients. This task is crucial and should be handled by either the owner or the most trusted individual."
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="10. The KEY is to be able to close the account."
+            android:textSize="16sp"
+            android:textColor="#e7004e"
+            />
+
+
+
+
+        <TextView
+            android:id="@+id/wisdom_paragraph_11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="This means you must collect the loan interest plus atleast 10% of the original loan amount after every 5 days. "
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+
+    </LinearLayout>
+</ScrollView>

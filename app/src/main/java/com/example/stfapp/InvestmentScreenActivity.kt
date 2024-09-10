@@ -155,9 +155,6 @@ class InvestmentScreenActivity : AppCompatActivity() {
                         )
                             .addOnSuccessListener {
                                 Log.d("InvestmentScreenActivity", "Client updated successfully.")
-                                // Redirect to CollectorDetailsActivity or any other action
-                                val intent = Intent(this, CollectorDetailsActivity::class.java)
-                                startActivity(intent)
                                 finish() // Optional: Close the current activity
                             }
                             .addOnFailureListener { e ->

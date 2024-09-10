@@ -29,21 +29,45 @@ class CreateCollectorActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val collector = hashMapOf(
-                "name" to collectorName,
-                "branch" to branch // Store the branch name in the collector document
-            )
-
-            firestore.collection("collectors")
-                .add(collector)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Collector added", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Error adding collector", Toast.LENGTH_SHORT).show()
-                    e.printStackTrace()
-                }
+            checkCollectorExistsAndSave(collectorName, branch)
         }
+    }
+
+    private fun checkCollectorExistsAndSave(collectorName: String, branch: String) {
+        firestore.collection("collectors")
+            .whereEqualTo("name", collectorName)
+            .whereEqualTo("branch", branch)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.isEmpty) {
+                    // Collector name does not exist in the branch, proceed with saving
+                    saveCollector(collectorName, branch)
+                } else {
+                    // Collector name already exists in the branch
+                    Toast.makeText(this, "Collector name already exists in this branch", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error checking collector name", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+    }
+
+    private fun saveCollector(collectorName: String, branch: String) {
+        val collector = hashMapOf(
+            "name" to collectorName,
+            "branch" to branch // Store the branch name in the collector document
+        )
+
+        firestore.collection("collectors")
+            .add(collector)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Collector added successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error adding collector", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
     }
 }

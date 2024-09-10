@@ -27,19 +27,41 @@ class CreateBranchActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val branch = hashMapOf("name" to branchName)
-
-            // Add branch to the branches collection
-            firestore.collection("branches")
-                .add(branch)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Branch added successfully", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Error adding branch", Toast.LENGTH_SHORT).show()
-                    e.printStackTrace()
-                }
+            checkBranchExistsAndSave(branchName)
         }
+    }
+
+    private fun checkBranchExistsAndSave(branchName: String) {
+        firestore.collection("branches")
+            .whereEqualTo("name", branchName)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.isEmpty) {
+                    // Branch name does not exist, proceed with saving
+                    saveBranch(branchName)
+                } else {
+                    // Branch name already exists
+                    Toast.makeText(this, "Branch name already exists", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error checking branch name", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+    }
+
+    private fun saveBranch(branchName: String) {
+        val branch = hashMapOf("name" to branchName)
+
+        firestore.collection("branches")
+            .add(branch)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Branch added successfully", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error adding branch", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
     }
 }

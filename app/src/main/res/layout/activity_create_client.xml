@@ -16,7 +16,7 @@
         android:text="Create Client"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

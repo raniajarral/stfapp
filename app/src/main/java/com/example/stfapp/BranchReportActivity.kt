@@ -43,6 +43,18 @@ class BranchReportActivity : AppCompatActivity() {
                         branchReports.add(report)
                         // Update the adapter with new reports
                         branchReportAdapter.updateReports(branchReports)
+
+                        // Update branch data including total profit
+                        updateBranchData(
+                            report.branchName,
+                            report.totalActiveClients,
+                            report.totalInactiveClients,
+                            report.totalLoan,
+                            report.totalPayable,
+                            report.totalBadClients,
+                            report.totalCollectors,
+                            report.totalProfit // Pass the totalProfit to update method
+                        )
                     }
                 }
             }
@@ -63,6 +75,7 @@ class BranchReportActivity : AppCompatActivity() {
                 var totalActivePayable = 0.0
                 var totalBadClients = 0
                 var totalCollectors = 0
+                var totalProfit = 0.0
 
                 for (collector in collectors) {
                     totalActiveClients += collector.getLong("totalActiveClients")?.toInt() ?: 0
@@ -71,6 +84,9 @@ class BranchReportActivity : AppCompatActivity() {
                     totalActivePayable += collector.getDouble("totalActivePayable") ?: 0.0
                     totalBadClients += collector.getLong("totalBadClients")?.toInt() ?: 0
                     totalCollectors += 1 // Count each collector
+
+                    // Sum the totalProfit field from each collector
+                    totalProfit += collector.getDouble("totalProfit") ?: 0.0
                 }
 
                 val branchReport = BranchReport(
@@ -80,11 +96,9 @@ class BranchReportActivity : AppCompatActivity() {
                     totalActiveAmount,
                     totalActivePayable,
                     totalBadClients,
-                    totalCollectors // Add total collectors to the report
+                    totalCollectors,
+                    totalProfit // Use the summed totalProfit
                 )
-
-                // Optionally update branch data
-                updateBranchData(branchName, totalActiveClients, totalInactiveClients, totalActiveAmount, totalActivePayable, totalBadClients, totalCollectors)
 
                 callback(branchReport)
             }
@@ -94,7 +108,7 @@ class BranchReportActivity : AppCompatActivity() {
             }
     }
 
-    private fun updateBranchData(branchName: String, totalActiveClients: Int, totalInactiveClients: Int, totalActiveAmount: Double, totalActivePayable: Double, totalBadClients: Int, totalCollectors: Int) {
+    private fun updateBranchData(branchName: String, totalActiveClients: Int, totalInactiveClients: Int, totalActiveAmount: Double, totalActivePayable: Double, totalBadClients: Int, totalCollectors: Int, totalProfit: Double) {
         firestore.collection("branches")
             .whereEqualTo("name", branchName)
             .get()
@@ -112,7 +126,8 @@ class BranchReportActivity : AppCompatActivity() {
                     "totalActiveAmount" to totalActiveAmount,
                     "totalActivePayable" to totalActivePayable,
                     "totalBadClients" to totalBadClients,
-                    "totalCollectors" to totalCollectors // Add total collectors to branch data
+                    "totalCollectors" to totalCollectors,
+                    "totalProfit" to totalProfit // Add totalProfit to branch data
                 )
 
                 firestore.collection("branches").document(branchId)

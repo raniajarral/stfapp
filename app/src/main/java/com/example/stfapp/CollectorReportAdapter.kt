@@ -12,8 +12,10 @@ data class CollectorReport(
     val inactiveCount: Int,
     val totalLoan: Double,
     val totalPayable: Double,
-    val totalBadClients: Int
+    val totalBadClients: Int,
+    var totalProfit: Double // Changed to var to allow reassignment
 )
+
 
 class CollectorReportAdapter(private val reports: List<CollectorReport>) :
     RecyclerView.Adapter<CollectorReportAdapter.ViewHolder>() {
@@ -25,6 +27,7 @@ class CollectorReportAdapter(private val reports: List<CollectorReport>) :
         val totalLoanTextView: TextView = view.findViewById(R.id.loanAmount)
         val totalPayableTextView: TextView = view.findViewById(R.id.payableAmount)
         val totalBadClientsTextView: TextView = view.findViewById(R.id.badClients)
+        val totalProfitTextView: TextView = view.findViewById(R.id.totalProfit) // Added view
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,6 +44,7 @@ class CollectorReportAdapter(private val reports: List<CollectorReport>) :
         holder.totalLoanTextView.text = "Loan: ${report.totalLoan}"
         holder.totalPayableTextView.text = "Payable: ${report.totalPayable}"
         holder.totalBadClientsTextView.text = "Bad Clients: ${report.totalBadClients}"
+        holder.totalProfitTextView.text = "Total Profit: ${report.totalProfit}" // Set profit value
     }
 
     override fun getItemCount(): Int {

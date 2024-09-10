@@ -71,4 +71,12 @@
         android:paddingTop="4dp"
         android:text="Total Collectors: "/>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/totalProfit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingTop="4dp"
+        android:text="Total Profit: "/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -13,8 +13,10 @@ data class BranchReport(
     val totalLoan: Double,
     val totalPayable: Double,
     val totalBadClients: Int,
-    val totalCollectors: Int // Added field for total collectors
+    val totalCollectors: Int,
+    val totalProfit: Double // Add this field
 )
+
 
 class BranchReportAdapter(private val reports: MutableList<BranchReport>) :
     RecyclerView.Adapter<BranchReportAdapter.BranchReportViewHolder>() {
@@ -26,7 +28,8 @@ class BranchReportAdapter(private val reports: MutableList<BranchReport>) :
         val totalLoanTextView: TextView = itemView.findViewById(R.id.loanAmount)
         val totalPayableTextView: TextView = itemView.findViewById(R.id.payableAmount)
         val totalBadClientsTextView: TextView = itemView.findViewById(R.id.badClients)
-        val totalCollectorsTextView: TextView = itemView.findViewById(R.id.totalCollectors) // New TextView for total collectors
+        val totalCollectorsTextView: TextView = itemView.findViewById(R.id.totalCollectors)
+        val totalProfitTextView: TextView = itemView.findViewById(R.id.totalProfit) // New TextView for total profit
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BranchReportViewHolder {
@@ -43,14 +46,14 @@ class BranchReportAdapter(private val reports: MutableList<BranchReport>) :
         holder.totalLoanTextView.text = "Total Loan: ${report.totalLoan}"
         holder.totalPayableTextView.text = "Total Payable: ${report.totalPayable}"
         holder.totalBadClientsTextView.text = "Bad Clients: ${report.totalBadClients}"
-        holder.totalCollectorsTextView.text = "Total Collectors: ${report.totalCollectors}" // Bind total collectors data
+        holder.totalCollectorsTextView.text = "Total Collectors: ${report.totalCollectors}"
+        holder.totalProfitTextView.text = "Total Profit: ${report.totalProfit}" // Bind total profit data
     }
 
     override fun getItemCount(): Int {
         return reports.size
     }
 
-    // Update the reports list and notify the adapter
     fun updateReports(newReports: List<BranchReport>) {
         reports.clear()
         reports.addAll(newReports)

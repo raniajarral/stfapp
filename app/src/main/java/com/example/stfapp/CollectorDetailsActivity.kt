@@ -142,13 +142,14 @@ class CollectorDetailsActivity : AppCompatActivity() {
             }
     }
 
+
     private fun updateActiveClientListView() {
-        val activeAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, activeClients)
+        val activeAdapter = ArrayAdapter(this, R.layout.list_item_card, R.id.card_text, activeClients)
         activeClientsListView.adapter = activeAdapter
     }
 
     private fun updateInactiveClientListView() {
-        val inactiveAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, inactiveClients)
+        val inactiveAdapter = ArrayAdapter(this, R.layout.list_item_card, R.id.card_text, inactiveClients)
         inactiveClientsListView.adapter = inactiveAdapter
     }
 
@@ -159,11 +160,12 @@ class CollectorDetailsActivity : AppCompatActivity() {
         val filteredInactiveClients = inactiveClients.filter {
             it.contains(query ?: "", ignoreCase = true)
         }
-        val activeAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, filteredActiveClients)
-        val inactiveAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, filteredInactiveClients)
+        val activeAdapter = ArrayAdapter(this, R.layout.list_item_card, R.id.card_text, filteredActiveClients)
+        val inactiveAdapter = ArrayAdapter(this, R.layout.list_item_card, R.id.card_text, filteredInactiveClients)
         activeClientsListView.adapter = activeAdapter
         inactiveClientsListView.adapter = inactiveAdapter
     }
+
 
     private fun updateCollectorStats() {
         if (collectorId.isEmpty()) return

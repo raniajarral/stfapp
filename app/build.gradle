@@ -36,6 +36,7 @@ android {
     }
     buildFeatures {
         compose true
+        viewBinding true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
@@ -63,7 +64,13 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.material
     implementation libs.androidx.activity
+    implementation "androidx.core:core-splashscreen:1.0.0"
     implementation libs.androidx.constraintlayout
+    implementation 'androidx.drawerlayout:drawerlayout:1.1.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation libs.androidx.annotation
+    implementation libs.androidx.lifecycle.livedata.ktx
+    implementation libs.androidx.lifecycle.viewmodel.ktx
     testImplementation libs.junit
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

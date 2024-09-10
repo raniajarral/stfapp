@@ -3,6 +3,7 @@ package com.example.stfapp
 import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import com.google.firebase.Timestamp
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -31,6 +32,7 @@ class ClientDetailsActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
     private lateinit var markAsBadButton: Button
     private lateinit var balanceTextView: TextView
+    private lateinit var totalProfitValue: TextView
     private lateinit var editButton: Button
     private val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
     private val calendar = Calendar.getInstance()
@@ -50,6 +52,7 @@ class ClientDetailsActivity : AppCompatActivity() {
         dueDateTextView = findViewById(R.id.dueDateValue)
         collectionEditText = findViewById(R.id.collectionValue)
         saveButton = findViewById(R.id.saveButton)
+        totalProfitValue = findViewById(R.id.totalProfitValue)
         markAsBadButton = findViewById(R.id.badButton)
         editButton = findViewById(R.id.editButton)
 
@@ -131,6 +134,10 @@ class ClientDetailsActivity : AppCompatActivity() {
                     val document = querySnapshot.documents[0]
                     Log.d("ClientDetailsActivity", "DocumentSnapshot data: ${document.data}")
                     populateFields(document)
+
+                    // Fetch and display profit records for this client
+                    val clientId = document.id
+                    fetchProfitRecord(clientId)
                 } else {
                     Log.d("ClientDetailsActivity", "No such document")
                     Toast.makeText(this, "No such client", Toast.LENGTH_SHORT).show()
@@ -195,6 +202,12 @@ class ClientDetailsActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Log.d("ClientDetailsActivity", "Client details successfully updated")
                             Toast.makeText(this, "Client details successfully updated", Toast.LENGTH_SHORT).show()
+                            finish()
+
+                            // Check if the status is "inactive" and update ProfitRecord
+                            if (updatedStatus == "inactive") {
+                                updateProfitRecord(clientId, currentPayable, newCollection, currentAmount)
+                            }
                         }
                         .addOnFailureListener { exception ->
                             Log.d("ClientDetailsActivity", "Error updating client details: ", exception)
@@ -210,6 +223,58 @@ class ClientDetailsActivity : AppCompatActivity() {
             }
     }
 
+
+    private fun updateProfitRecord(clientId: String, previousPayable: Double, collectedAmount: Double, previousAmount: Double) {
+        // Calculate profit as the difference between collected amount and previous amount
+        val profitAmount = collectedAmount - previousAmount
+
+        // Prepare the profit data
+        val profitData = mapOf(
+            "clientId" to clientId,
+            "profit" to profitAmount,
+            "collectedAmount" to collectedAmount,
+            "previousAmount" to previousAmount,
+            "previousPayable" to previousPayable,
+            "date" to Timestamp.now()
+        )
+
+        // Create a new document in the ProfitRecord collection with a unique ID
+        val profitRecordRef = firestore.collection("ProfitRecord").document() // Generate a unique ID
+
+        profitRecordRef.set(profitData)
+            .addOnSuccessListener {
+                Log.d("ClientDetailsActivity", "Profit record successfully created")
+                Toast.makeText(this, "Profit record successfully created", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { exception ->
+                Log.d("ClientDetailsActivity", "Error creating profit record: ", exception)
+                Toast.makeText(this, "Error creating profit record: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
+    private fun fetchProfitRecord(clientId: String) {
+        firestore.collection("ProfitRecord")
+            .whereEqualTo("clientId", clientId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    // Sum up all profit records for the client
+                    val totalProfit = querySnapshot.documents.sumOf { it.getDouble("profit") ?: 0.0 }
+
+                    // Display the total profit
+                    totalProfitValue.text = String.format(Locale.getDefault(), "%.2f", totalProfit)
+                } else {
+                    totalProfitValue.text = "0.00"
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("ClientDetailsActivity", "Error fetching profit record: ", exception)
+                totalProfitValue.text = "Error"
+            }
+    }
 
 
 
@@ -228,6 +293,7 @@ class ClientDetailsActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Log.d("ClientDetailsActivity", "Client status successfully updated to 'bad'")
                             Toast.makeText(this, "Client status successfully updated to 'bad'", Toast.LENGTH_SHORT).show()
+                            finish()
                         }
                         .addOnFailureListener { exception ->
                             Log.d("ClientDetailsActivity", "Error updating client status: ", exception)

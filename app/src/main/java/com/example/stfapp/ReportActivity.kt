@@ -25,21 +25,21 @@ class ReportActivity : AppCompatActivity() {
         reportAdapter = CollectorReportAdapter(emptyList())
         collectorsRecyclerView.adapter = reportAdapter
 
-        fetchCollectorReports()
+        fetchAndCalculateProfitForCollectors()
     }
 
-    private fun fetchCollectorReports() {
-        // Get the branch name from the intent
+    private fun fetchAndCalculateProfitForCollectors() {
         val branchName = intent.getStringExtra("branchName") ?: return
 
-        // Query collectors belonging to the specific branch
         firestore.collection("collectors")
-            .whereEqualTo("branch", branchName) // Filter by the branch
+            .whereEqualTo("branch", branchName)
             .get()
             .addOnSuccessListener { collectorDocuments ->
-                val reports = mutableListOf<CollectorReport>()
+                val collectorIds = mutableListOf<String>()
+                val collectorMap = mutableMapOf<String, CollectorReport>()
 
                 for (document in collectorDocuments) {
+                    val collectorId = document.id
                     val collectorName = document.getString("name") ?: "Unknown Collector"
                     val activeCount = document.getLong("totalActiveClients")?.toInt() ?: 0
                     val inactiveCount = document.getLong("totalInactiveClients")?.toInt() ?: 0
@@ -47,20 +47,24 @@ class ReportActivity : AppCompatActivity() {
                     val totalPayable = document.getDouble("totalActivePayable") ?: 0.0
                     val totalBadClients = document.getLong("totalBadClients")?.toInt() ?: 0
 
-                    val report = CollectorReport(
+                    collectorIds.add(collectorId)
+                    collectorMap[collectorId] = CollectorReport(
                         collectorName,
                         activeCount,
                         inactiveCount,
                         totalLoan,
                         totalPayable,
-                        totalBadClients
+                        totalBadClients,
+                        0.0 // Placeholder for totalProfit
                     )
-
-                    reports.add(report)
                 }
 
-                reportAdapter = CollectorReportAdapter(reports)
-                collectorsRecyclerView.adapter = reportAdapter
+                if (collectorIds.isNotEmpty()) {
+                    fetchProfitRecordsForClients(collectorIds, collectorMap)
+                } else {
+                    reportAdapter = CollectorReportAdapter(collectorMap.values.toList())
+                    collectorsRecyclerView.adapter = reportAdapter
+                }
             }
             .addOnFailureListener { e ->
                 Log.w("ReportActivity", "Error fetching collector reports", e)
@@ -68,4 +72,58 @@ class ReportActivity : AppCompatActivity() {
             }
     }
 
+    private fun fetchProfitRecordsForClients(collectorIds: List<String>, collectorMap: MutableMap<String, CollectorReport>) {
+        firestore.collection("clients")
+            .whereIn("collectorId", collectorIds)
+            .get()
+            .addOnSuccessListener { clientDocuments ->
+                val clientIds = clientDocuments.map { it.id }
+
+                if (clientIds.isNotEmpty()) {
+                    firestore.collection("ProfitRecord")
+                        .whereIn("clientId", clientIds)
+                        .get()
+                        .addOnSuccessListener { profitDocuments ->
+                            val profitMap = mutableMapOf<String, Double>()
+                            for (document in profitDocuments) {
+                                val clientId = document.getString("clientId") ?: continue
+                                val profit = document.getDouble("profit") ?: 0.0
+                                profitMap[clientId] = (profitMap[clientId] ?: 0.0) + profit
+                            }
+
+                            for ((collectorId, report) in collectorMap) {
+                                val collectorClientIds = clientDocuments
+                                    .filter { it.getString("collectorId") == collectorId }
+                                    .map { it.id }
+                                val totalProfit = collectorClientIds.sumOf { profitMap[it] ?: 0.0 }
+                                report.totalProfit = totalProfit
+
+                                // Update the collector document with the new totalProfit
+                                firestore.collection("collectors").document(collectorId)
+                                    .update("totalProfit", totalProfit)
+                                    .addOnSuccessListener {
+                                        Log.d("ReportActivity", "Successfully updated totalProfit for collector $collectorId")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.w("ReportActivity", "Error updating totalProfit for collector $collectorId", e)
+                                    }
+                            }
+
+                            reportAdapter = CollectorReportAdapter(collectorMap.values.toList())
+                            collectorsRecyclerView.adapter = reportAdapter
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("ReportActivity", "Error fetching profit records", e)
+                            Toast.makeText(this, "Error fetching profit records", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    reportAdapter = CollectorReportAdapter(collectorMap.values.toList())
+                    collectorsRecyclerView.adapter = reportAdapter
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("ReportActivity", "Error fetching clients", e)
+                Toast.makeText(this, "Error fetching clients", Toast.LENGTH_SHORT).show()
+            }
+    }
 }

@@ -3,16 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".YourApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="stfapp"
+        android:label="PAYLY"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.STFAPP"
         tools:targetApi="31">
+        <activity
+            android:name=".SplashActivity"
+            android:exported="false"
+            android:theme="@style/Theme.STFAPP.SplashScreen"/>
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.STFAPP">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".WisdomActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportCalculationActivity"
+            android:exported="false" />
         <activity
             android:name=".BranchReportActivity"
             android:exported="false" />
@@ -45,15 +64,8 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.STFAPP">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:label="Payly"></activity>
     </application>
 
 </manifest>

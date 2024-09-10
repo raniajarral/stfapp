@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.TextView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -75,7 +76,7 @@ class BranchDetailsActivity : AppCompatActivity() {
                 if (collectors.isEmpty()) {
                     Toast.makeText(this, "No collectors found", Toast.LENGTH_SHORT).show()
                 }
-                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, collectors)
+                val adapter = ArrayAdapter(this, R.layout.list_item_card, R.id.card_text, collectors)
                 collectorsListView.adapter = adapter
             }
             .addOnFailureListener { e ->
@@ -83,6 +84,7 @@ class BranchDetailsActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error fetching collectors", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun fetchCollectorId(branchName: String, collectorName: String, callback: (String) -> Unit) {
         firestore.collection("collectors")

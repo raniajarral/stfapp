@@ -7,7 +7,6 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class BadClientsActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
@@ -26,7 +25,6 @@ class BadClientsActivity : AppCompatActivity() {
 
         // Fetch and display bad clients
         fetchBadClients()
-
     }
 
     private fun fetchBadClients() {
@@ -54,7 +52,8 @@ class BadClientsActivity : AppCompatActivity() {
                 // Update collector's document with the count of bad clients
                 updateCollectorBadClientsCount(totalBadClients)
 
-                val badClientsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, badClients)
+                // Use a custom adapter with the card style layout
+                val badClientsAdapter = ArrayAdapter(this, R.layout.list_item_card, R.id.card_text, badClients)
                 badClientsListView.adapter = badClientsAdapter
             }
     }

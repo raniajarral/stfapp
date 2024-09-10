@@ -5,4 +5,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <!-- Customize your theme here -->
     </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.STFAPP.SplashScreen" parent="Theme.SplashScreen">
+        <!-- Background color of the splash screen -->
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <!-- Logo or branding image -->
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <!-- Duration of the splash screen animation (in milliseconds) -->
+        <item name="android:windowSplashScreenAnimationDuration">3000</item>
+    </style>
 </resources>

@@ -36,21 +36,37 @@ class CreateClientActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Create client data with a collectorId field
-            val client = hashMapOf(
-                "name" to clientName,
-                "status" to "inactive", // Default status
-                "collectorId" to collectorId // Store collectorId directly
-            )
-
+            // Check if a client with the same name already exists under the same collector
             firestore.collection("clients")
-                .add(client)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Client added", Toast.LENGTH_SHORT).show()
-                    finish()
+                .whereEqualTo("name", clientName)
+                .whereEqualTo("collectorId", collectorId)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.documents.isEmpty()) {
+                        // No client with the same name found, add the new client
+                        val client = hashMapOf(
+                            "name" to clientName,
+                            "status" to "inactive", // Default status
+                            "collectorId" to collectorId // Store collectorId directly
+                        )
+
+                        firestore.collection("clients")
+                            .add(client)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Client added", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Error adding client", Toast.LENGTH_SHORT).show()
+                                e.printStackTrace()
+                            }
+                    } else {
+                        // A client with the same name already exists
+                        Toast.makeText(this, "Client with this name already exists under this collector", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, "Error adding client", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error checking client existence", Toast.LENGTH_SHORT).show()
                     e.printStackTrace()
                 }
         }
